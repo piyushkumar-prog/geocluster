@@ -1,0 +1,71 @@
+{
+  "name": "geocluster",
+  "version": "1.0.0",
+  "description": "High-performance capacity-constrained spatial clustering with pluggable distances, weights, and constraints",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "benchmark": "tsx benchmarks/benchmark.ts",
+    "demo": "vite demo --open",
+    "build:demo": "vite build demo --outDir ../dist-demo --base /geocluster/ --emptyOutDir",
+    "lint": "eslint src/**/*.ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "keywords": [
+    "clustering",
+    "k-means",
+    "balanced-clustering",
+    "capacity-constrained",
+    "spatial",
+    "geospatial",
+    "location",
+    "route-planning",
+    "territory",
+    "logistics",
+    "delivery",
+    "field-service"
+  ],
+  "author": "Piyush Kumar <piyushkumar.prog@gmail.com> and Shivanghi Sharma",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piyushkumar-prog/geocluster.git"
+  },
+  "bugs": {
+    "url": "https://github.com/piyushkumar-prog/geocluster/issues"
+  },
+  "homepage": "https://github.com/piyushkumar-prog/geocluster#readme",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "tsup": "^8.0.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.7",
+    "vitest": "^1.0.4"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

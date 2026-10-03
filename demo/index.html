@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoCluster - Interactive Demo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+        }
+
+        #container {
+            display: flex;
+            height: 100vh;
+        }
+
+        #sidebar {
+            width: 320px;
+            background: white;
+            padding: 24px;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        #map {
+            flex: 1;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .control-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 8px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4A90E2;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4A90E2;
+            cursor: pointer;
+            border: none;
+        }
+
+        .value-display {
+            display: inline-block;
+            margin-left: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4A90E2;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        button:hover {
+            background: #357ABD;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .stats {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .stats-label {
+            color: #666;
+        }
+
+        .stats-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #4A90E2;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #333;
+            margin-top: 16px;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 24px 32px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 16px;
+            color: #333;
+            z-index: 2000;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="sidebar">
+            <h1>GeoCluster</h1>
+            <p class="subtitle">Balanced spatial clustering demo</p>
+
+            <div class="control-group">
+                <label>
+                    Number of Clusters (K): <span class="value-display" id="k-value">5</span>
+                </label>
+                <input type="range" id="k-slider" min="2" max="20" value="5">
+            </div>
+
+            <div class="control-group">
+                <label>
+                    Max Capacity: <span class="value-display" id="capacity-value">50</span>
+                </label>
+                <input type="range" id="capacity-slider" min="10" max="100" value="50" step="5">
+            </div>
+
+            <div class="control-group">
+                <label>Dataset:</label>
+                <select id="dataset-select">
+                    <option value="random-usa">Random USA Cities (100)</option>
+                    <option value="random-world">Random World (200)</option>
+                    <option value="clusters">Clustered Points (150)</option>
+                    <option value="uniform">Uniform Grid (100)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Solver:</label>
+                <select id="solver-select">
+                    <option value="fast">Fast (Greedy)</option>
+                    <option value="exact">Exact (Min-Cost)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="show-centroids" checked>
+                    <label for="show-centroids">Show Centroids</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="show-bounds">
+                    <label for="show-bounds">Show Cluster Bounds</label>
+                </div>
+            </div>
+
+            <button id="recluster-btn">Re-cluster</button>
+            <button id="regenerate-btn">Regenerate Data</button>
+
+            <div class="control-group">
+                <label>Statistics:</label>
+                <div class="stats" id="stats">
+                    <div class="stats-row">
+                        <span class="stats-label">Total Points:</span>
+                        <span class="stats-value">-</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Clusters:</span>
+                        <span class="stats-value">-</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Imbalance Ratio:</span>
+                        <span class="stats-value">-</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Avg Distance:</span>
+                        <span class="stats-value">-</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Max Distance:</span>
+                        <span class="stats-value">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>How it works:</strong><br>
+                Adjust the sliders to change the number of clusters and maximum capacity.
+                The algorithm ensures balanced clusters while minimizing total distance.
+            </div>
+        </div>
+
+        <div id="map"></div>
+        <div id="loading" class="loading hidden">Clustering...</div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module" src="./demo.js"></script>
+</body>
+</html>

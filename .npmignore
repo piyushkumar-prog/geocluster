@@ -1,0 +1,47 @@
+# Development files
+src/
+tests/
+benchmarks/
+demo/
+
+# Configuration
+tsconfig.json
+vitest.config.ts
+.eslintrc.json
+
+# CI/CD
+.github/
+
+# Documentation (internal - not for npm users)
+IMPLEMENTATION_PLAN.md
+PROJECT_SUMMARY.md
+PUBLISHING.md
+QUICK_START.md
+PRE_PUBLISH_CHECKLIST.md
+ATTRIBUTION.md
+CONTRIBUTORS.md
+PUBLISHED_FILES.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.tsbuildinfo
+coverage/
+
+# Only these will be published (as defined in package.json "files"):
+# - dist/
+# - README.md (user documentation)
+# - LICENSE (required)
+# - CHANGELOG.md will be published (version history for users)

@@ -1,0 +1,16 @@
+node_modules
+.DS_Store
+*.log
+.env
+.vscode
+.idea
+coverage
+*.tsbuildinfo
+dist-demo
+IMPLEMENTATION_PLAN.md
+QUICK_START.md
+ATTRIBUTION.md
+PUBLISHING.md
+PRE_PUBLISH_CHECKLIST.md
+PROJECT_SUMMARY.md
+PUBLISHED_FILES.md
