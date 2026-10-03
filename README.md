@@ -23,7 +23,7 @@ When you're dividing work among delivery drivers, field technicians, or sales re
 ## ✨ The Solution
 
 ```typescript
-import { balancedCluster } from 'geocluster';
+import { balancedCluster } from 'geocluster-js';
 
 const result = balancedCluster(deliveryStops, {
   k: 8,                              // 8 drivers
@@ -53,7 +53,7 @@ const result = balancedCluster(deliveryStops, {
 ## 📦 Installation
 
 ```bash
-npm install geocluster
+npm install geocluster-js
 ```
 
 ## 🎓 Quick Start
@@ -61,7 +61,7 @@ npm install geocluster
 ### Basic Geographic Clustering
 
 ```typescript
-import { geoCluster, toGeoJSON } from 'geocluster';
+import { geoCluster, toGeoJSON } from 'geocluster-js';
 
 const stores = [
   { name: 'Store 1', lat: 40.7128, lng: -74.006 },
@@ -89,7 +89,7 @@ const geojson = toGeoJSON(result);
 ### Advanced: Custom Weights and Constraints
 
 ```typescript
-import { balancedCluster, distances } from 'geocluster';
+import { balancedCluster, distances } from 'geocluster-js';
 
 const deliveries = [
   { lat: 40.7, lng: -74.0, serviceMinutes: 15, coldChain: true },
@@ -128,7 +128,7 @@ result.clusters.forEach((cluster, i) => {
 ### Using Precomputed Distance Matrix (Road Network)
 
 ```typescript
-import { balancedCluster, distances } from 'geocluster';
+import { balancedCluster, distances } from 'geocluster-js';
 
 // Get driving times from OSRM, Valhalla, or Google Maps
 const drivingTimes = [
@@ -150,7 +150,7 @@ const result = balancedCluster(points, {
 ### Sticky/Incremental Clustering
 
 ```typescript
-import { balancedCluster, extractAssignments } from 'geocluster';
+import { balancedCluster, extractAssignments } from 'geocluster-js';
 
 // Initial clustering
 const result1 = balancedCluster(points, { k: 5, seed: 42 });
@@ -176,7 +176,7 @@ Check out the **[interactive demo](demo/index.html)** with real-time clustering 
 ### Export to GeoJSON
 
 ```typescript
-import { toGeoJSON, centroidsToGeoJSON, toStyledGeoJSON } from 'geocluster';
+import { toGeoJSON, centroidsToGeoJSON, toStyledGeoJSON } from 'geocluster-js';
 
 const result = geoCluster(stores, { k: 5 });
 
@@ -291,7 +291,7 @@ Convenience function for geographic clustering.
 ### Distance Functions
 
 ```typescript
-import { distances } from 'geocluster';
+import { distances } from 'geocluster-js';
 
 distances.euclidean          // 2D Euclidean
 distances.haversine          // Geographic (km)
