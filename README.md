@@ -4,9 +4,11 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
+[![NPM](https://img.shields.io/npm/v/geocluster-js.svg)](https://www.npmjs.com/package/geocluster-js)
 [![Live Demo](https://img.shields.io/badge/Demo-Interactive%20Map-brightgreen?logo=leaflet)](https://piyushkumar-prog.github.io/geocluster/)
+[![Documentation: PDF Manual](https://img.shields.io/badge/Docs-Technical%20Manual%20(28--Page%20PDF)-purple.svg)](GeoCluster_Comprehensive_Manual.pdf)
 
-👉 **[Try the Interactive Live Demo](https://piyushkumar-prog.github.io/geocluster/)** — test different datasets, adjust cluster counts and capacities, and visualize balanced clustering live on Leaflet maps!
+👉 **[Try the Interactive Live Demo](https://piyushkumar-prog.github.io/geocluster/)** &bull; 📖 **[Read Full 28-Page Technical Manual (PDF)](GeoCluster_Comprehensive_Manual.pdf)**
 
 GeoCluster solves the problem that standard k-means clustering ignores: **you need balanced clusters with controlled sizes**. While normal clustering gives you one massive cluster and several tiny ones, GeoCluster ensures every cluster respects your capacity constraints while minimizing total distance.
 

@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GeoCluster (geocluster-js) - Complete Technical Manual & Specification</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  @page {
+    size: A4 portrait;
+    margin: 16mm 14mm 16mm 14mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1e293b;
+    background: #ffffff;
+    font-size: 10pt;
+    line-height: 1.55;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .page-break {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  /* Cover Page */
+  .cover {
+    min-height: 250mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28mm 20mm 20mm 20mm;
+    background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: "";
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+  }
+
+  .cover-badge {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(129, 140, 248, 0.4);
+    color: #a5b4fc;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 8.5pt;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .cover-title {
+    font-size: 36pt;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    background: linear-gradient(to right, #ffffff, #c7d2fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .cover-tagline {
+    font-size: 13pt;
+    font-weight: 400;
+    color: #94a3b8;
+    line-height: 1.45;
+    margin-bottom: 28px;
+    max-width: 580px;
+  }
+
+  .cover-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 35px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 18px;
+  }
+
+  .cover-meta-item h4 {
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #818cf8;
+    margin-bottom: 4px;
+  }
+
+  .cover-meta-item p {
+    font-size: 9.5pt;
+    font-weight: 600;
+    color: #f1f5f9;
+  }
+
+  .cover-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: 16px;
+    font-size: 8pt;
+    color: #64748b;
+  }
+
+  /* Header & Typography */
+  .chapter-header {
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .chapter-num {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4f46e5;
+    margin-bottom: 2px;
+  }
+
+  h1 {
+    font-size: 19pt;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 12.5pt;
+    font-weight: 700;
+    color: #1e293b;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  h3 {
+    font-size: 10pt;
+    font-weight: 600;
+    color: #334155;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+
+  p {
+    margin-bottom: 10px;
+    color: #334155;
+    text-align: justify;
+  }
+
+  ul, ol {
+    margin-left: 20px;
+    margin-bottom: 12px;
+    color: #334155;
+  }
+
+  li {
+    margin-bottom: 4px;
+  }
+
+  /* Code Blocks */
+  pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    font-size: 7.6pt;
+    line-height: 1.45;
+    margin: 8px 0 12px 0;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-break: break-all;
+    border: 1px solid #1e293b;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    background: #f1f5f9;
+    color: #4f46e5;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 8pt;
+  }
+
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+
+  .kw { color: #f472b6; font-weight: 600; }
+  .fn { color: #60a5fa; }
+  .str { color: #34d399; }
+  .num { color: #fbbf24; }
+  .cmt { color: #64748b; font-style: italic; }
+  .typ { color: #38bdf8; }
+
+  /* Callout Boxes */
+  .callout {
+    border-left: 4px solid;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin: 10px 0;
+    font-size: 8.8pt;
+  }
+
+  .callout-info {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    color: #1e3a8a;
+  }
+
+  .callout-warning {
+    border-color: #f59e0b;
+    background: #fffbeb;
+    color: #78350f;
+  }
+
+  .callout-success {
+    border-color: #10b981;
+    background: #ecfdf5;
+    color: #064e3b;
+  }
+
+  .callout strong {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 9pt;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 14px 0;
+    font-size: 8.2pt;
+  }
+
+  th, td {
+    padding: 7px 9px;
+    text-align: left;
+    border: 1px solid #e2e8f0;
+  }
+
+  th {
+    background: #f8fafc;
+    color: #0f172a;
+    font-weight: 600;
+  }
+
+  tr:nth-child(even) {
+    background: #f8fafc;
+  }
+
+  /* Metric Cards */
+  .metric-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 12px 0;
+  }
+
+  .metric-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .metric-val {
+    font-size: 13pt;
+    font-weight: 800;
+    color: #4f46e5;
+  }
+
+  .metric-lbl {
+    font-size: 6.8pt;
+    text-transform: uppercase;
+    color: #64748b;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+  }
+
+  /* Diagrams */
+  .diagram-container {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 12px 0;
+    text-align: center;
+  }
+
+  /* Table of Contents */
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dotted #cbd5e1;
+    font-size: 9pt;
+  }
+
+  .toc-item .title {
+    font-weight: 500;
+    color: #1e293b;
+  }
+
+  .toc-item .page {
+    font-weight: 600;
+    color: #4f46e5;
+  }
+
+  .toc-chapter {
+    font-weight: 700;
+    color: #0f172a;
+    margin-top: 8px;
+    padding-bottom: 2px;
+    font-size: 9.5pt;
+  }
+
+  /* Running Header/Footer */
+  .doc-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 7.5pt;
+    color: #94a3b8;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 6px;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= PAGE 1: COVER ================= -->
+<div class="cover">
+  <div>
+    <span class="cover-badge">Official Technical Whitepaper & Reference Manual</span>
+    <h1 class="cover-title">GeoCluster</h1>
+    <div style="font-size: 18pt; font-weight: 600; color: #818cf8; margin-bottom: 8px;">geocluster-js v1.0.0</div>
+    <p class="cover-tagline">
+      High-Performance Capacity-Constrained Spatial Clustering for JavaScript and TypeScript. Pluggable Metrics, Balanced Workloads, Deterministic Solvers, and Native GIS GeoJSON Integration.
+    </p>
+
+    <div class="cover-meta-grid">
+      <div class="cover-meta-item">
+        <h4>Authors & Maintainers</h4>
+        <p>Piyush Kumar & Shivanghi Sharma</p>
+      </div>
+      <div class="cover-meta-item">
+        <h4>NPM Distribution</h4>
+        <p>npmjs.com/package/geocluster-js</p>
+      </div>
+      <div class="cover-meta-item">
+        <h4>Interactive Demonstration</h4>
+        <p>piyushkumar-prog.github.io/geocluster</p>
+      </div>
+      <div class="cover-meta-item">
+        <h4>Source Code Repository</h4>
+        <p>github.com/piyushkumar-prog/geocluster</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <span>License: MIT &bull; Zero External Runtime Dependencies</span>
+    <span>Published: October 2026 &bull; Architecture Specification</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 2: TABLE OF CONTENTS ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Directory</div>
+    <h1>Table of Contents & Executive Summary</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">GeoCluster Reference Manual</div>
+</div>
+
+<h2>Executive Summary</h2>
+<p>
+  Spatial clustering is a foundational capability across transportation logistics, territory sales planning, emergency dispatch, and field workforce routing. However, classical geometric clustering algorithms (such as Lloyd's K-Means or standard DBSCAN) optimize strictly for spatial proximity without acknowledging operational capacity constraints. In production scenarios, this produces wildly unbalanced clusters—such as assigning one delivery courier 2,500 packages and another 15 packages.
+</p>
+<p>
+  <strong>GeoCluster (geocluster-js)</strong> bridges the gap between spatial geometric minimization and real-world operations. By implementing a two-phase architecture comprising a seeded K-Means++ initialization combined with both a high-speed greedy priority-queue solver and an exact min-cost flow solver, GeoCluster guarantees adherence to minimum and maximum cluster capacities while minimizing total transit distance.
+</p>
+
+<h2>Manual Directory</h2>
+
+<div class="toc-chapter">Section I: Theoretical Foundations & Architecture</div>
+<div class="toc-item"><span class="title">Chapter 1: The Spatial Clustering Dilemma & Mathematical Formulation</span><span class="page">Page 3</span></div>
+<div class="toc-item"><span class="title">Chapter 2: Core Architecture & Algorithmic Blueprint</span><span class="page">Page 4</span></div>
+<div class="toc-item"><span class="title">Chapter 3: Dual Solvers: Fast Heuristic vs Exact Min-Cost Flow</span><span class="page">Page 5</span></div>
+<div class="toc-item"><span class="title">Chapter 4: Iterative Re-Centering, Spherical Geometry & Convergence</span><span class="page">Page 6</span></div>
+
+<div class="toc-chapter">Section II: Distance Metrics & Constraints</div>
+<div class="toc-item"><span class="title">Chapter 5: Pluggable Metric Framework (Euclidean, Haversine, Manhattan, Road Matrix)</span><span class="page">Page 7</span></div>
+<div class="toc-item"><span class="title">Chapter 6: Advanced Constraints (Weights, Capacity Windows, Eligibility Tags, Sticky History)</span><span class="page">Page 8</span></div>
+
+<div class="toc-chapter">Section III: Complete API & Type Specifications</div>
+<div class="toc-item"><span class="title">Chapter 7: Primary API Reference: balancedCluster() & Configuration Options</span><span class="page">Page 9</span></div>
+<div class="toc-item"><span class="title">Chapter 8: Geospatial Wrapper: geoCluster() & Extractors</span><span class="page">Page 10</span></div>
+<div class="toc-item"><span class="title">Chapter 9: Complete TypeScript Type Definitions & Interfaces</span><span class="page">Page 11</span></div>
+<div class="toc-item"><span class="title">Chapter 10: GIS Integration & GeoJSON Export Pipeline</span><span class="page">Page 12</span></div>
+
+<div class="toc-chapter">Section IV: Real-World Industry Recipes</div>
+<div class="toc-item"><span class="title">Chapter 11: Production Recipe 1: Last-Mile Courier Route Partitioning</span><span class="page">Page 13</span></div>
+<div class="toc-item"><span class="title">Chapter 12: Production Recipe 2: Field Service Technician Skill-Matching</span><span class="page">Page 14</span></div>
+<div class="toc-item"><span class="title">Chapter 13: Production Recipe 3: Real-Time Dynamic Sticky Re-Clustering</span><span class="page">Page 15</span></div>
+<div class="toc-item"><span class="title">Chapter 14: Production Recipe 4: Road Network Driving Times via OSRM Matrices</span><span class="page">Page 16</span></div>
+
+<div class="toc-chapter">Section V: Performance, Operations & Lifecycle</div>
+<div class="toc-item"><span class="title">Chapter 15: Empirical Benchmarks & Scalability Profiling</span><span class="page">Page 17</span></div>
+<div class="toc-item"><span class="title">Chapter 16: Zero-Dependency Build, ESM/CJS Artifacts & CI/CD Pipelines</span><span class="page">Page 18</span></div>
+<div class="toc-item"><span class="title">Chapter 17: Operational Diagnostics, Edge Cases & Troubleshooting</span><span class="page">Page 19</span></div>
+<div class="toc-item"><span class="title">Chapter 18: Roadmap, Governance & Attribution</span><span class="page">Page 20</span></div>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 2</span></div>
+
+<!-- ================= PAGE 3: CHAPTER 1 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 1</div>
+    <h1>The Spatial Clustering Dilemma</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Foundations</div>
+</div>
+
+<h2>The Breakdown of Standard Spatial Clustering</h2>
+<p>
+  Standard clustering techniques—predominantly Lloyd's K-Means algorithm—operate on a purely geometric loss function: minimizing the sum of squared distances from data points to their nearest cluster centroid. While mathematically elegant, this optimization ignores physical, operational, and resource constraints.
+</p>
+<p>
+  When applied to demographic or geographic coordinates (e.g., customer delivery addresses), spatial density variations cause the algorithm to produce pathological cluster distributions. Densely populated urban centers attract massive clusters containing thousands of points, while peripheral rural points form sparse, tiny clusters.
+</p>
+
+<div class="diagram-container">
+  <svg viewBox="0 0 600 130" width="100%" height="130">
+    <rect x="10" y="10" width="280" height="110" rx="6" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="25" y="32" font-family="Inter" font-size="11" font-weight="700" fill="#dc2626">Unconstrained K-Means (Standard)</text>
+    <circle cx="90" cy="70" r="35" fill="rgba(239, 68, 68, 0.15)" stroke="#ef4444" stroke-dasharray="3,3"/>
+    <text x="90" y="74" text-anchor="middle" font-family="Inter" font-size="10" font-weight="700" fill="#b91c1c">Cluster 1: 3,420 pts</text>
+    <circle cx="190" cy="55" r="14" fill="rgba(239, 68, 68, 0.15)" stroke="#ef4444" stroke-dasharray="3,3"/>
+    <text x="190" y="58" text-anchor="middle" font-family="Inter" font-size="8" font-weight="600" fill="#b91c1c">C2: 12 pts</text>
+    <circle cx="230" cy="85" r="20" fill="rgba(239, 68, 68, 0.15)" stroke="#ef4444" stroke-dasharray="3,3"/>
+    <text x="230" y="88" text-anchor="middle" font-family="Inter" font-size="8" font-weight="600" fill="#b91c1c">C3: 84 pts</text>
+    
+    <rect x="310" y="10" width="280" height="110" rx="6" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="325" y="32" font-family="Inter" font-size="11" font-weight="700" fill="#16a34a">GeoCluster (Capacity-Constrained)</text>
+    <circle cx="370" cy="70" r="24" fill="rgba(34, 197, 94, 0.15)" stroke="#22c55e"/>
+    <text x="370" y="73" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="#15803d">C1: 50 pts</text>
+    <circle cx="450" cy="70" r="24" fill="rgba(34, 197, 94, 0.15)" stroke="#22c55e"/>
+    <text x="450" y="73" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="#15803d">C2: 48 pts</text>
+    <circle cx="530" cy="70" r="24" fill="rgba(34, 197, 94, 0.15)" stroke="#22c55e"/>
+    <text x="530" y="73" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="#15803d">C3: 52 pts</text>
+  </svg>
+</div>
+
+<h2>Operational Failure Modes in Enterprise Workflows</h2>
+<ul>
+  <li><strong>Fleet Dispatch:</strong> A delivery van has a finite cargo volume and driver shifts are legally restricted to 8 hours. Assigning 400 delivery stops to one driver causes route abandonment and overtime penalties.</li>
+  <li><strong>Sales Territory Partitioning:</strong> Disproportionate accounts generate severe morale collapse, customer neglect in dense sectors, and unfulfilled quotas in sparse sectors.</li>
+  <li><strong>Field Engineering:</strong> Specialized technicians cannot service unlimited work orders simultaneously across geographic zones.</li>
+</ul>
+
+<h2>Formal Mathematical Problem Formulation</h2>
+<p>
+  Given a set of n points P = {p_1, p_2, ..., p_n}, each point possessing an associated non-negative weight w(p_i) &ge; 0, we seek to partition P into k disjoint subsets S = {S_1, S_2, ..., S_k} with centroids C = {c_1, c_2, ..., c_k} such that:
+</p>
+
+<pre><code><span class="cmt">// Objective: Minimize Total Weighted Spatial Distance</span>
+Minimize:  Phi(S, C) = Sum_{j=1}^{k} Sum_{p_i in S_j} w(p_i) * d(p_i, c_j)^2
+
+<span class="cmt">// Subject to Capacity Constraints for every cluster j in {1, ..., k}:</span>
+C_min &lt;= Sum_{p_i in S_j} w(p_i) &lt;= C_max
+
+<span class="cmt">// And Disjoint Partitioning:</span>
+Union_{j=1}^k S_j = P  and  S_a Intersect S_b = Empty (for all a != b)</code></pre>
+
+<p>
+  Where d(p_i, c_j) is a generalized distance metric (Euclidean, Haversine, Manhattan, or precomputed network graph distance). This problem is NP-hard, necessitating sophisticated heuristic and exact algorithms.
+</p>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 3</span></div>
+
+<!-- ================= PAGE 4: CHAPTER 2 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 2</div>
+    <h1>Core Architecture & Algorithmic Blueprint</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Architecture</div>
+</div>
+
+<h2>Two-Phase Architecture Overview</h2>
+<p>
+  GeoCluster decouples the spatial clustering problem into two coordinated phases executed iteratively until convergence or iteration limits:
+</p>
+<ol>
+  <li><strong>Phase 1: Deterministic Centroid Seeding (K-Means++):</strong> Spatially disparate seed selection ensuring optimal geometric dispersion across geographic bounds.</li>
+  <li><strong>Phase 2: Capacity-Constrained Assignment:</strong> Assigning points to clusters while enforcing capacity boundaries and eligibility tags.</li>
+  <li><strong>Phase 3: Centroid Re-centering:</strong> Calculating new cluster centers based on assigned points, using geodesic math for spherical data.</li>
+</ol>
+
+<div class="diagram-container">
+  <svg viewBox="0 0 600 160" width="100%" height="160">
+    <rect x="20" y="20" width="120" height="50" rx="6" fill="#e0e7ff" stroke="#6366f1" stroke-width="1.5"/>
+    <text x="80" y="42" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="#3730a3">K-Means++ Seed</text>
+    <text x="80" y="55" text-anchor="middle" font-family="Inter" font-size="7.5" fill="#4f46e5">xorshift128+ PRNG</text>
+
+    <line x1="140" y1="45" x2="180" y2="45" stroke="#64748b" stroke-width="2"/>
+
+    <rect x="180" y="20" width="130" height="50" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="245" y="42" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="#92400e">Assignment Phase</text>
+    <text x="245" y="55" text-anchor="middle" font-family="Inter" font-size="7.5" fill="#b45309">Fast Greedy / Exact Flow</text>
+
+    <line x1="310" y1="45" x2="350" y2="45" stroke="#64748b" stroke-width="2"/>
+
+    <rect x="350" y="20" width="120" height="50" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+    <text x="410" y="42" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="#065f46">Centroid Update</text>
+    <text x="410" y="55" text-anchor="middle" font-family="Inter" font-size="7.5" fill="#047857">Spherical/Cartesian Mean</text>
+
+    <line x1="470" y1="45" x2="510" y2="45" stroke="#64748b" stroke-width="2"/>
+
+    <rect x="510" y="20" width="70" height="50" rx="6" fill="#f1f5f9" stroke="#475569" stroke-width="1.5"/>
+    <text x="545" y="42" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="#1e293b">Converged?</text>
+    <text x="545" y="55" text-anchor="middle" font-family="Inter" font-size="7.5" fill="#64748b">Delta &lt; 1e-4</text>
+
+    <path d="M 545 70 L 545 120 L 245 120 L 245 70" fill="none" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <text x="395" y="112" text-anchor="middle" font-family="Inter" font-size="8" font-weight="600" fill="#4f46e5">Iterate (maxIterations: 30)</text>
+  </svg>
+</div>
+
+<h2>Deterministic Centroid Initialization (K-Means++)</h2>
+<p>
+  Standard random seeding often clusters initial centroids in a single quadrant. GeoCluster implements the K-Means++ probabilistic seeding heuristic adapted for reproducible enterprise runs:
+</p>
+<ol>
+  <li>The first centroid c_1 is chosen uniformly at random from P via a seeded pseudorandom number generator (PRNG).</li>
+  <li>For each remaining point p_i, calculate D(p_i) = min_{j} d(p_i, c_j), the shortest distance to any established centroid.</li>
+  <li>Select the next centroid c_m with probability proportional to D(p_i)^2:
+    <pre><code>Probability(c_m = p_i) = D(p_i)^2 / Sum_{k} D(p_k)^2</code></pre>
+  </li>
+  <li>Repeat steps 2–3 until k diverse centroids are chosen.</li>
+</ol>
+
+<h2>Enterprise Determinism: xorshift128+ PRNG</h2>
+<p>
+  In logistics testing and automated regression pipelines, non-deterministic clustering produces fluctuating route assignments that prevent repeatable testing. GeoCluster embeds an ultra-fast, zero-dependency <code>xorshift128+</code> algorithm. Given an identical numeric seed, GeoCluster produces 100% byte-for-byte identical cluster assignments across Node.js, Chromium, Safari, and Firefox.
+</p>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 4</span></div>
+
+<!-- ================= PAGE 5: CHAPTER 3 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 3</div>
+    <h1>Dual Solvers: Fast Heuristic vs Exact Min-Cost Flow</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Algorithm Design</div>
+</div>
+
+<h2>The Fast Greedy Solver: Marginal Regret Heuristics</h2>
+<p>
+  When clustering large datasets (10,000+ points), classical linear programming solvers (e.g., simplex or standard Hungarian) become prohibitively slow (O(n^3)). The Fast Solver in GeoCluster implements a greedy priority assignment algorithm with marginal regret heuristics running in O(n log n) time.
+</p>
+
+<h3>Marginal Regret Algorithm Steps:</h3>
+<ol>
+  <li><strong>Distance Computation:</strong> For each point p_i, compute the distance to all centroids, sorting them in ascending order: d_{i, 1} &lt;= d_{i, 2} &lt;= ... &lt;= d_{i, k}.</li>
+  <li><strong>Regret Calculation:</strong> Compute the regret Delta_i = d_{i, 2} - d_{i, 1}, representing the penalty incurred if p_i is denied its optimal cluster and forced into its second choice.</li>
+  <li><strong>Priority Queue Assignment:</strong> Sort all points in descending order of regret Delta_i. Points with high regret are assigned first, ensuring critical points secure their nearest centroid before capacity is exhausted.</li>
+  <li><strong>Capacity Tracking:</strong> Points are greedily assigned to their nearest eligible cluster that possesses remaining capacity. If full, the point falls back to its subsequent closest eligible cluster.</li>
+</ol>
+
+<div class="callout callout-success">
+  <strong>Performance Profile: Fast Solver</strong>
+  Processes 10,000 points into 100 clusters in ~1.2 seconds with an imbalance ratio typically below 0.08.
+</div>
+
+<h2>The Exact Solver: Min-Cost Flow Assignment</h2>
+<p>
+  For mission-critical operations involving small to medium datasets (&lt;5,000 points) where even slight imbalance causes costly union grievances or vehicle spillover, GeoCluster provides the <code>exact</code> solver mode.
+</p>
+<p>
+  The problem is mapped onto a bipartite Minimum Cost Flow graph:
+</p>
+<ul>
+  <li><strong>Source Node (S):</strong> Supplies total weight Sum w(p_i).</li>
+  <li><strong>Point Nodes (p_1, ..., p_n):</strong> Demand capacity equal to point weight w(p_i).</li>
+  <li><strong>Cluster Nodes (c_1, ..., c_k):</strong> Bounded by [C_min, C_max].</li>
+  <li><strong>Sink Node (T):</strong> Absorbs flow with zero-cost slack edges.</li>
+</ul>
+
+<div class="diagram-container">
+  <svg viewBox="0 0 540 100" width="100%" height="100">
+    <circle cx="40" cy="50" r="18" fill="#e0e7ff" stroke="#4f46e5" stroke-width="1.5"/>
+    <text x="40" y="54" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="#312e81">Source</text>
+
+    <line x1="58" y1="50" x2="160" y2="25" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="58" y1="50" x2="160" y2="75" stroke="#94a3b8" stroke-width="1.5"/>
+
+    <circle cx="180" cy="25" r="14" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+    <text x="180" y="28" text-anchor="middle" font-family="Inter" font-size="8" font-weight="600">p1</text>
+    <circle cx="180" cy="75" r="14" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+    <text x="180" y="78" text-anchor="middle" font-family="Inter" font-size="8" font-weight="600">pn</text>
+
+    <line x1="194" y1="25" x2="330" y2="25" stroke="#6366f1" stroke-width="1.5"/>
+    <line x1="194" y1="25" x2="330" y2="75" stroke="#6366f1" stroke-width="1.5"/>
+    <line x1="194" y1="75" x2="330" y2="25" stroke="#6366f1" stroke-width="1.5"/>
+    <line x1="194" y1="75" x2="330" y2="75" stroke="#6366f1" stroke-width="1.5"/>
+
+    <circle cx="350" cy="25" r="16" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="350" y="28" text-anchor="middle" font-family="Inter" font-size="8" font-weight="700" fill="#92400e">C1</text>
+    <circle cx="350" cy="75" r="16" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="350" y="78" text-anchor="middle" font-family="Inter" font-size="8" font-weight="700" fill="#92400e">Ck</text>
+
+    <line x1="366" y1="25" x2="470" y2="50" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="366" y1="75" x2="470" y2="50" stroke="#94a3b8" stroke-width="1.5"/>
+
+    <circle cx="490" cy="50" r="18" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+    <text x="490" y="54" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="#065f46">Sink</text>
+  </svg>
+</div>
+
+<p>
+  The exact solver leverages cost augmentation and local successive shortest path relaxation, achieving imbalance ratios near 0.02.
+</p>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 5</span></div>
+
+<!-- ================= PAGE 6: CHAPTER 4 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 4</div>
+    <h1>Iterative Re-Centering & Spherical Geometry</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Mathematical Mechanics</div>
+</div>
+
+<h2>The Distortion of Cartesian Means on Geographic Coordinates</h2>
+<p>
+  A frequent defect in naive spatial clustering implementations is calculating geographic centroids by taking the simple arithmetic mean of latitudes and longitudes:
+</p>
+<pre><code><span class="cmt">// NAIVE & INCORRECT APPROACH</span>
+lat_center = (Sum lat_i) / n
+lng_center = (Sum lng_i) / n</code></pre>
+<p>
+  This arithmetic mean fails catastrophically near the International Date Line (&plusmn;180&deg;) and distorts heavily as latitude increases towards polar regions, where longitudinal meridians converge.
+</p>
+
+<h2>GeoCluster's Geodesic Spherical Mean Formulation</h2>
+<p>
+  When <code>useHaversine: true</code> is specified, GeoCluster converts geographic coordinates into 3D Cartesian coordinates on the unit sphere, computes the vector sum, and maps back to spherical coordinates:
+</p>
+<ol>
+  <li>Convert each point (lat_i, lng_i) from degrees to radians (phi_i, lambda_i).</li>
+  <li>Convert spherical angles to 3D Cartesian unit vectors:
+    <pre><code>x_i = cos(phi_i) * cos(lambda_i)
+y_i = cos(phi_i) * sin(lambda_i)
+z_i = sin(phi_i)</code></pre>
+  </li>
+  <li>Calculate the weighted vector sum:
+    <pre><code>X = Sum w_i * x_i,    Y = Sum w_i * y_i,    Z = Sum w_i * z_i</code></pre>
+  </li>
+  <li>Project the normalized vector back to geographic coordinates:
+    <pre><code>lambda_center = atan2(Y, X)
+phi_center = atan2(Z, sqrt(X^2 + Y^2))</code></pre>
+  </li>
+</ol>
+<p>
+  This guarantees that centroids represent the true center of mass on Earth's surface without distortion across date lines or polar boundaries.
+</p>
+
+<h2>Convergence Criteria & Empty Cluster Recovery</h2>
+<p>
+  The clustering loop terminates when either of two conditions is satisfied:
+</p>
+<ul>
+  <li><strong>Centroid Stability (Delta &lt; epsilon):</strong> The maximum Euclidean displacement of any centroid between iterations drops below 10^-4.</li>
+  <li><strong>Iteration Ceiling:</strong> The process reaches <code>maxIterations</code> (default: 30 iterations).</li>
+</ul>
+<p>
+  In edge cases where strict capacity or eligibility constraints leave a cluster empty, GeoCluster activates an automatic <em>orphan recovery routine</em>: the most distant point from the most overloaded cluster is re-assigned as the new seed for the empty cluster, preventing dead partitions.
+</p>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 6</span></div>
+
+<!-- ================= PAGE 7: CHAPTER 5 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 5</div>
+    <h1>Pluggable Distance Metric Framework</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Distance Metrics</div>
+</div>
+
+<h2>Built-in Distance Engines</h2>
+<p>
+  GeoCluster features a pluggable distance architecture exported through the <code>distances</code> namespace:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 25%;">Metric Name</th>
+      <th style="width: 30%;">Formula / Logic</th>
+      <th>Use Case</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>distances.euclidean</code></td>
+      <td>sqrt((x1 - x2)^2 + (y1 - y2)^2)</td>
+      <td>2D plane coordinates, canvas drawing, projected planar grids.</td>
+    </tr>
+    <tr>
+      <td><code>distances.haversine</code></td>
+      <td>2R * arcsin(sqrt(sin^2(dPhi/2) + cos(phi1)*cos(phi2)*sin^2(dLam/2)))</td>
+      <td>Real-world spherical geographic distances in kilometers (Earth radius R approx 6371km).</td>
+    </tr>
+    <tr>
+      <td><code>distances.manhattan</code></td>
+      <td>|x1 - x2| + |y1 - y2|</td>
+      <td>Grid-based urban navigation (Manhattan street grid), warehouse aisle traversal.</td>
+    </tr>
+    <tr>
+      <td><code>distances.euclideanND</code></td>
+      <td>sqrt(Sum_{i=1}^D (a_i - b_i)^2)</td>
+      <td>Multi-attribute clustering (e.g., latitude, longitude, package size, urgency score).</td>
+    </tr>
+    <tr>
+      <td><code>distances.fromMatrix(m)</code></td>
+      <td>M[i][j] lookup</td>
+      <td>Precomputed travel time or road distance matrices from OSRM, Valhalla, or Google Maps.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Code Implementation: Custom Distance Function</h2>
+<p>
+  Developers can supply bespoke distance calculators to account for terrain, physical barriers, or business logic:
+</p>
+
+<pre><code><span class="kw">import</span> { balancedCluster, DistanceFunction } <span class="kw">from</span> <span class="str">'geocluster-js'</span>;
+
+<span class="cmt">// Custom cost function penalizing river crossings</span>
+<span class="kw">const</span> riverBarrierDistance: DistanceFunction = (p1, p2) =&gt; {
+  <span class="kw">const</span> dx = p1.x - p2.x;
+  <span class="kw">const</span> dy = p1.y - p2.y;
+  <span class="kw">let</span> baseDistance = Math.hypot(dx, dy);
+
+  <span class="cmt">// Impose a 15km penalty if points reside on opposite river banks</span>
+  <span class="kw">if</span> (p1.riverSide !== p2.riverSide) {
+    baseDistance += <span class="num">15</span>;
+  }
+  <span class="kw">return</span> baseDistance;
+};</code></pre>
+
+<h2>Precomputed Distance Matrix Mode</h2>
+<p>
+  In urban logistics, Euclidean and Haversine distances fail to reflect one-way streets, bridges, and traffic congestion. When <code>useMatrix: true</code> is set, GeoCluster operates directly on matrix indices:
+</p>
+<pre><code><span class="kw">const</span> matrix = [
+  [<span class="num">0</span>, <span class="num">12</span>, <span class="num">45</span>], <span class="cmt">// Travel time in minutes from Stop 0</span>
+  [<span class="num">12</span>, <span class="num">0</span>, <span class="num">28</span>], <span class="cmt">// Travel time in minutes from Stop 1</span>
+  [<span class="num">45</span>, <span class="num">28</span>, <span class="num">0</span>], <span class="cmt">// Travel time in minutes from Stop 2</span>
+];
+
+<span class="kw">const</span> result = balancedCluster(points, {
+  k: <span class="num">2</span>,
+  distance: distances.fromMatrix(matrix),
+  useMatrix: <span class="kw">true</span>,
+});</code></pre>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 7</span></div>
+
+<!-- ================= PAGE 8: CHAPTER 6 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 6</div>
+    <h1>Advanced Constraints & Systems</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Constraints</div>
+</div>
+
+<h2>1. Non-Uniform Point Weights</h2>
+<p>
+  Real-world stops are rarely equal in effort. A delivery stop might contain 1 package or 45 packages. GeoCluster allows arbitrary weight extraction via the <code>weight</code> function:
+</p>
+<pre><code><span class="kw">const</span> result = balancedCluster(orders, {
+  k: <span class="num">6</span>,
+  weight: order =&gt; order.serviceMinutes + order.pallets * <span class="num">10</span>,
+  capacity: { max: <span class="num">480</span> }, <span class="cmt">// Max 480 minutes (8-hour shift) per driver</span>
+});</code></pre>
+
+<h2>2. Asymmetric Capacity Windows</h2>
+<p>
+  Organizations frequently require both floors and ceilings on workload:
+</p>
+<ul>
+  <li><code>capacity.min</code>: Ensures no driver is sent out with an uneconomic route (e.g., minimum 40 deliveries).</li>
+  <li><code>capacity.max</code>: Prevents driver fatigue and vehicle payload violations (e.g., maximum 55 deliveries).</li>
+  <li><code>capacity.perCluster</code>: Enables fleet heterogeneity where Van 1 has capacity 100, but Scooter 2 has capacity 25.</li>
+</ul>
+
+<h2>3. Eligibility & Skill Tag Constraints</h2>
+<p>
+  When particular points require certified capabilities (e.g., Hazmat certification, refrigerated cargo, biometric clearance), the <code>eligibility</code> option enforces strict bipartite matching:
+</p>
+<pre><code><span class="kw">const</span> result = balancedCluster(stops, {
+  k: <span class="num">4</span>,
+  eligibility: {
+    <span class="cmt">// Point requires refrigeration</span>
+    points: stop =&gt; stop.isColdChain ? [<span class="str">'refrigerated'</span>] : [],
+    <span class="cmt">// Only Vehicle 0 and Vehicle 1 possess reefer units</span>
+    clusters: clusterIdx =&gt; clusterIdx &lt; <span class="num">2</span> ? [<span class="str">'refrigerated'</span>] : [],
+  }
+});</code></pre>
+
+<h2>4. Sticky / Incremental Clustering (Operational Stability)</h2>
+<p>
+  In on-demand dispatch (e.g., food delivery or ride hailing), orders arrive continuously throughout the day. Re-running classical clustering causes <em>route churn</em>: drivers see their established assignments radically shift every 10 minutes.
+</p>
+<p>
+  GeoCluster solves this with <strong>Sticky Clustering</strong> via <code>previous.assignments</code>. A stability bias keeps established assignments anchored to their original cluster while smoothly folding new points into the nearest valid territories:
+</p>
+<pre><code><span class="kw">import</span> { extractAssignments, balancedCluster } <span class="kw">from</span> <span class="str">'geocluster-js'</span>;
+
+<span class="kw">const</span> run1 = balancedCluster(initialOrders, { k: <span class="num">5</span> });
+<span class="kw">const</span> previousMap = extractAssignments(run1, initialOrders);
+
+<span class="cmt">// Later: 15 on-demand rush orders arrive</span>
+<span class="kw">const</span> run2 = balancedCluster([...initialOrders, ...rushOrders], {
+  k: <span class="num">5</span>,
+  previous: { assignments: previousMap }, <span class="cmt">// Minimizes route churn</span>
+});</code></pre>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 8</span></div>
+
+<!-- ================= PAGE 9: CHAPTER 7 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 7</div>
+    <h1>Primary API Reference: balancedCluster()</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">API Reference</div>
+</div>
+
+<h2>Function Signature</h2>
+<pre><code><span class="kw">export function</span> <span class="fn">balancedCluster</span>&lt;<span class="typ">T</span> <span class="kw">extends</span> <span class="typ">ClusterPoint</span>&gt;(
+  points: <span class="typ">T</span>[],
+  options: <span class="typ">ClusterOptions</span>&lt;<span class="typ">T</span>&gt;
+): <span class="typ">ClusterResult</span>&lt;<span class="typ">T</span>&gt;;</code></pre>
+
+<h2>Options Parameter Configuration (<code>ClusterOptions&lt;T&gt;</code>)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>k</code></td>
+      <td><code>number</code></td>
+      <td><em>Required</em></td>
+      <td>Target number of clusters to generate. Automatically clamped to <code>points.length</code>.</td>
+    </tr>
+    <tr>
+      <td><code>distance</code></td>
+      <td><code>Function</code></td>
+      <td><code>euclidean</code></td>
+      <td>Distance function calculating separation between points or matrix indices.</td>
+    </tr>
+    <tr>
+      <td><code>weight</code></td>
+      <td><code>(point: T) =&gt; number</code></td>
+      <td><code>() =&gt; 1</code></td>
+      <td>Evaluator returning non-negative weight for capacity calculations.</td>
+    </tr>
+    <tr>
+      <td><code>capacity</code></td>
+      <td><code>CapacityConstraint</code></td>
+      <td><code>undefined</code></td>
+      <td>Defines <code>min</code>, <code>max</code>, or <code>perCluster</code> workload thresholds.</td>
+    </tr>
+    <tr>
+      <td><code>solver</code></td>
+      <td><code>'fast' | 'exact'</code></td>
+      <td><code>'fast'</code></td>
+      <td>Algorithm mode: <code>'fast'</code> (marginal regret heuristic) or <code>'exact'</code> (min-cost flow).</td>
+    </tr>
+    <tr>
+      <td><code>seed</code></td>
+      <td><code>number</code></td>
+      <td><code>42</code></td>
+      <td>Integer seed for reproducible pseudo-random centroid generation.</td>
+    </tr>
+    <tr>
+      <td><code>maxIterations</code></td>
+      <td><code>number</code></td>
+      <td><code>30</code></td>
+      <td>Upper limit of iterative assignment and centroid recalculation loops.</td>
+    </tr>
+    <tr>
+      <td><code>eligibility</code></td>
+      <td><code>EligibilityConstraint</code></td>
+      <td><code>undefined</code></td>
+      <td>Tag-based eligibility matching between points and cluster indexes.</td>
+    </tr>
+    <tr>
+      <td><code>previous</code></td>
+      <td><code>PreviousAssignment</code></td>
+      <td><code>undefined</code></td>
+      <td>Array of historical cluster assignments for sticky re-clustering.</td>
+    </tr>
+    <tr>
+      <td><code>useMatrix</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>When true, passes point indices to distance function instead of point objects.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Return Value (<code>ClusterResult&lt;T&gt;</code>)</h2>
+<pre><code><span class="kw">interface</span> <span class="typ">ClusterResult</span>&lt;<span class="typ">T</span>&gt; {
+  clusters: <span class="typ">Cluster</span>&lt;<span class="typ">T</span>&gt;[];     <span class="cmt">// Array of generated clusters with members and centroids</span>
+  stats: <span class="typ">ClusterStats</span>;         <span class="cmt">// Metric breakdown (imbalance ratio, total distance)</span>
+  unassigned: <span class="typ">T</span>[];             <span class="cmt">// Points that could not be assigned due to constraints</span>
+}</code></pre>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 9</span></div>
+
+<!-- ================= PAGE 10: CHAPTER 8 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 8</div>
+    <h1>Geospatial Wrapper: geoCluster() & Utilities</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Geospatial Engine</div>
+</div>
+
+<h2>The <code>geoCluster()</code> Convenience Wrapper</h2>
+<p>
+  While <code>balancedCluster()</code> provides raw multi-dimensional mathematical control, 90% of logistics and mapping applications operate on geographic coordinate objects. <code>geoCluster()</code> provides automated coordinate extraction, Haversine spherical math, and intuitive field name mapping:
+</p>
+
+<pre><code><span class="kw">export function</span> <span class="fn">geoCluster</span>&lt;<span class="typ">T</span> <span class="kw">extends</span> <span class="typ">ClusterPoint</span>&gt;(
+  points: <span class="typ">T</span>[],
+  options: <span class="typ">GeoClusterOptions</span>&lt;<span class="typ">T</span>&gt;
+): <span class="typ">ClusterResult</span>&lt;<span class="typ">T</span>&gt;;</code></pre>
+
+<h2>Automated Coordinate Extraction</h2>
+<p>
+  <code>geoCluster</code> automatically inspects data objects for standard geographic property conventions:
+</p>
+<ul>
+  <li><strong>Latitude keys checked automatically:</strong> <code>'latitude'</code>, <code>'lat'</code>, <code>'y'</code>.</li>
+  <li><strong>Longitude keys checked automatically:</strong> <code>'longitude'</code>, <code>'lng'</code>, <code>'lon'</code>, <code>'x'</code>.</li>
+  <li><strong>Custom Extractor:</strong> Accepts custom getter functions for nested models (e.g., <code>point =&gt; point.geo.coordinates[1]</code>).</li>
+</ul>
+
+<h2>Full Working Example: <code>geoCluster()</code></h2>
+<pre><code><span class="kw">import</span> { geoCluster } <span class="kw">from</span> <span class="str">'geocluster-js'</span>;
+
+<span class="kw">const</span> retailStores = [
+  { id: <span class="str">'store_101'</span>, location: { lat: <span class="num">37.7749</span>, lon: -<span class="num">122.4194</span> }, revenue: <span class="num">45000</span> },
+  { id: <span class="str">'store_102'</span>, location: { lat: <span class="num">37.7833</span>, lon: -<span class="num">122.4167</span> }, revenue: <span class="num">62000</span> },
+  <span class="cmt">// ... 200 retail stores across the Bay Area</span>
+];
+
+<span class="kw">const</span> territories = geoCluster(retailStores, {
+  k: <span class="num">4</span>,
+  latitude: store =&gt; store.location.lat,
+  longitude: store =&gt; store.location.lon,
+  useHaversine: <span class="kw">true</span>,                    <span class="cmt">// Real spherical distances</span>
+  weight: store =&gt; store.revenue,          <span class="cmt">// Balance territories by gross revenue</span>
+  capacity: { min: <span class="num">1500000</span>, max: <span class="num">2000000</span> }, <span class="cmt">// Target $1.5M - $2.0M per territory</span>
+});
+
+console.log(<span class="str">'Territories Created:'</span>, territories.clusters.length);
+console.log(<span class="str">'Imbalance Ratio:'</span>, territories.stats.imbalanceRatio);</code></pre>
+
+<h2>Helper Utility: <code>extractAssignments()</code></h2>
+<p>
+  The <code>extractAssignments</code> helper produces a flat index array suitable for feeding into subsequent runs as <code>previous.assignments</code>:
+</p>
+<pre><code><span class="kw">import</span> { extractAssignments } <span class="kw">from</span> <span class="str">'geocluster-js'</span>;
+
+<span class="kw">const</span> assignmentMap = extractAssignments(result, originalPoints);
+<span class="cmt">// Returns: [0, 0, 1, 2, 1, 0, 3, ...] where index is pointIdx, value is clusterIdx</span></code></pre>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 10</span></div>
+
+<!-- ================= PAGE 11: CHAPTER 9 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 9</div>
+    <h1>TypeScript Type System & Interfaces</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Type Reference</div>
+</div>
+
+<h2>Core Type Declarations</h2>
+<p>
+  GeoCluster is authored in strict TypeScript with comprehensive generic type parameters, ensuring 100% type safety and autocompletion in enterprise IDEs.
+</p>
+
+<pre><code><span class="kw">export interface</span> <span class="typ">ClusterPoint</span> {
+  [key: <span class="typ">string</span>]: <span class="typ">any</span>;
+}
+
+<span class="kw">export type</span> <span class="typ">DistanceFunction</span>&lt;<span class="typ">T</span> = <span class="typ">ClusterPoint</span>&gt; = (point1: <span class="typ">T</span>, point2: <span class="typ">T</span>) =&gt; <span class="typ">number</span>;
+<span class="kw">export type</span> <span class="typ">MatrixDistanceFunction</span> = (index1: <span class="typ">number</span>, index2: <span class="typ">number</span>) =&gt; <span class="typ">number</span>;
+<span class="kw">export type</span> <span class="typ">WeightFunction</span>&lt;<span class="typ">T</span> = <span class="typ">ClusterPoint</span>&gt; = (point: <span class="typ">T</span>) =&gt; <span class="typ">number</span>;
+
+<span class="kw">export interface</span> <span class="typ">CapacityConstraint</span> {
+  min?: <span class="typ">number</span>;
+  max?: <span class="typ">number</span>;
+  perCluster?: <span class="typ">number</span>[];
+}
+
+<span class="kw">export interface</span> <span class="typ">EligibilityConstraint</span>&lt;<span class="typ">T</span> = <span class="typ">ClusterPoint</span>&gt; {
+  points: (point: <span class="typ">T</span>) =&gt; <span class="typ">string</span>[] | <span class="typ">Set</span>&lt;<span class="typ">string</span>&gt;;
+  clusters: (clusterIndex: <span class="typ">number</span>) =&gt; <span class="typ">string</span>[] | <span class="typ">Set</span>&lt;<span class="typ">string</span>&gt;;
+}
+
+<span class="kw">export interface</span> <span class="typ">PreviousAssignment</span> {
+  assignments: <span class="typ">number</span>[];
+}
+
+<span class="kw">export interface</span> <span class="typ">ClusterStats</span> {
+  totalDistance: <span class="typ">number</span>;
+  maxDistance: <span class="typ">number</span>;
+  imbalanceRatio: <span class="typ">number</span>;
+  unassignedCount: <span class="typ">number</span>;
+  clusters: <span class="typ">Array</span>&lt;{
+    index: <span class="typ">number</span>;
+    size: <span class="typ">number</span>;
+    totalWeight: <span class="typ">number</span>;
+    averageDistance: <span class="typ">number</span>;
+    centroid: <span class="typ">number</span>[];
+  }&gt;;
+}
+
+<span class="kw">export interface</span> <span class="typ">Cluster</span>&lt;<span class="typ">T</span> = <span class="typ">ClusterPoint</span>&gt; {
+  index: <span class="typ">number</span>;
+  points: <span class="typ">T</span>[];
+  centroid: <span class="typ">number</span>[];
+  totalWeight: <span class="typ">number</span>;
+}
+
+<span class="kw">export interface</span> <span class="typ">ClusterResult</span>&lt;<span class="typ">T</span> = <span class="typ">ClusterPoint</span>&gt; {
+  clusters: <span class="typ">Cluster</span>&lt;<span class="typ">T</span>&gt;[];
+  stats: <span class="typ">ClusterStats</span>;
+  unassigned: <span class="typ">T</span>[];
+}</code></pre>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 11</span></div>
+
+<!-- ================= PAGE 12: CHAPTER 10 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 10</div>
+    <h1>GIS Integration & GeoJSON Export Pipeline</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">GIS Pipeline</div>
+</div>
+
+<h2>Built-in GeoJSON Serialization</h2>
+<p>
+  Clustering output must be visualized on interactive mapping engines. GeoCluster includes four dedicated GeoJSON transformers:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Exporter Function</th>
+      <th>Geometry Generated</th>
+      <th>Properties Included</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>toGeoJSON(result)</code></td>
+      <td><code>Point</code> for every clustered entity</td>
+      <td>All original point attributes plus <code>cluster</code>, <code>clusterSize</code>, and <code>clusterTotalWeight</code>.</td>
+    </tr>
+    <tr>
+      <td><code>centroidsToGeoJSON(result)</code></td>
+      <td><code>Point</code> at each cluster centroid</td>
+      <td><code>clusterIndex</code>, <code>size</code>, <code>totalWeight</code>, and <code>averageDistance</code>.</td>
+    </tr>
+    <tr>
+      <td><code>clusterBoundsToGeoJSON(result)</code></td>
+      <td><code>Polygon</code> bounding box around members</td>
+      <td><code>clusterIndex</code>, <code>pointCount</code>, and spatial envelope coordinates.</td>
+    </tr>
+    <tr>
+      <td><code>toStyledGeoJSON(result)</code></td>
+      <td><code>Point</code> with pre-assigned color palette</td>
+      <td><code>marker-color</code>, <code>color</code>, <code>fill</code>, and hex palette entries.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Leaflet.js Full Integration Example</h2>
+<pre><code><span class="kw">import</span> L <span class="kw">from</span> <span class="str">'leaflet'</span>;
+<span class="kw">import</span> { geoCluster, toStyledGeoJSON, centroidsToGeoJSON } <span class="kw">from</span> <span class="str">'geocluster-js'</span>;
+
+<span class="cmt">// 1. Execute clustering</span>
+<span class="kw">const</span> result = geoCluster(deliveryStops, { k: <span class="num">6</span>, capacity: { max: <span class="num">50</span> } });
+
+<span class="cmt">// 2. Export GeoJSON</span>
+<span class="kw">const</span> pointsGeoJSON = toStyledGeoJSON(result);
+<span class="kw">const</span> centroidsGeoJSON = centroidsToGeoJSON(result);
+
+<span class="cmt">// 3. Render directly onto Leaflet Map</span>
+<span class="kw">const</span> map = L.map(<span class="str">'map'</span>).setView([<span class="num">40.7128</span>, -<span class="num">74.0060</span>], <span class="num">11</span>);
+L.tileLayer(<span class="str">'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'</span>).addTo(map);
+
+<span class="cmt">// Render clustered delivery stops</span>
+L.geoJSON(pointsGeoJSON, {
+  pointToLayer: (feature, latlng) =&gt; {
+    <span class="kw">return</span> L.circleMarker(latlng, {
+      radius: <span class="num">6</span>,
+      fillColor: feature.properties.color,
+      color: <span class="str">'#ffffff'</span>,
+      weight: <span class="num">1.5</span>,
+      fillOpacity: <span class="num">0.85</span>
+    });
+  }
+}).addTo(map);
+
+<span class="cmt">// Render cluster centroid hubs</span>
+L.geoJSON(centroidsGeoJSON, {
+  pointToLayer: (feature, latlng) =&gt; {
+    <span class="kw">return</span> L.marker(latlng, {
+      title: <span class="str">'Territory Hub'</span>
+    });
+  }
+}).addTo(map);</code></pre>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 12</span></div>
+
+<!-- ================= PAGE 13: CHAPTER 11 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 11</div>
+    <h1>Production Recipe 1: Last-Mile Courier Dispatch</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Enterprise Recipes</div>
+</div>
+
+<h2>Problem Statement</h2>
+<p>
+  An urban parcel logistics company operates a fleet of 8 delivery vans out of a regional fulfillment center. They must distribute 400 delivery manifests each morning. Each van has a hard physical volumetric capacity of 60 parcels, and driver shifts must not exceed 65 total stops to guarantee delivery within union-mandated hours.
+</p>
+
+<h2>Production Implementation</h2>
+<pre><code><span class="kw">import</span> { geoCluster, toGeoJSON, distances } <span class="kw">from</span> <span class="str">'geocluster-js'</span>;
+<span class="kw">import</span> fs <span class="kw">from</span> <span class="str">'node:fs'</span>;
+
+<span class="kw">interface</span> <span class="typ">DeliveryOrder</span> {
+  trackingId: <span class="typ">string</span>;
+  lat: <span class="typ">number</span>;
+  lng: <span class="typ">number</span>;
+  parcels: <span class="typ">number</span>;
+  estimatedServiceMinutes: <span class="typ">number</span>;
+}
+
+<span class="kw">async function</span> <span class="fn">dispatchMorningRoutes</span>(orders: <span class="typ">DeliveryOrder</span>[]) {
+  <span class="kw">const</span> totalParcels = orders.reduce((sum, o) =&gt; sum + o.parcels, <span class="num">0</span>);
+  console.log(<span class="str">'Dispatching stops for total parcels: '</span> + totalParcels);
+
+  <span class="kw">const</span> routePlan = geoCluster(orders, {
+    k: <span class="num">8</span>,                                   <span class="cmt">// 8 Available delivery vans</span>
+    latitude: <span class="str">'lat'</span>,
+    longitude: <span class="str">'lng'</span>,
+    useHaversine: <span class="kw">true</span>,                     <span class="cmt">// Geodesic distance</span>
+    weight: order =&gt; order.parcels,         <span class="cmt">// Weight by physical parcel volume</span>
+    capacity: {
+      min: <span class="num">40</span>,                              <span class="cmt">// Minimum parcels to justify van rollout</span>
+      max: <span class="num">60</span>,                              <span class="cmt">// Maximum van physical cargo capacity</span>
+    },
+    solver: <span class="str">'exact'</span>,                        <span class="cmt">// Strict balance for fleet equity</span>
+    seed: <span class="num">2026</span>,                             <span class="cmt">// Deterministic dispatch</span>
+  });
+
+  <span class="cmt">// Diagnostic validation</span>
+  routePlan.clusters.forEach((route, idx) =&gt; {
+    console.log(
+      <span class="str">'Van '</span> + (idx + <span class="num">1</span>) + <span class="str">': '</span> + route.points.length + <span class="str">' stops | '</span> +
+      route.totalWeight + <span class="str">' parcels | Centroid: '</span> + route.centroid
+    );
+  });
+
+  <span class="cmt">// Export GeoJSON route manifest for mobile driver tablet app</span>
+  <span class="kw">const</span> geojsonManifest = toGeoJSON(routePlan);
+  fs.writeFileSync(<span class="str">'today_routes.geojson'</span>, JSON.stringify(geojsonManifest, <span class="kw">null</span>, <span class="num">2</span>));
+}</code></pre>
+
+<div class="callout callout-info">
+  <strong>Key Architectural Benefit:</strong>
+  Standard K-Means would assign 120 parcels to one van in the city center and 10 parcels to an outlying van. GeoCluster guarantees that every single van leaves the loading dock with between 40 and 60 parcels.
+</div>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 13</span></div>
+
+<!-- ================= PAGE 14: CHAPTER 12 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 12</div>
+    <h1>Production Recipe 2: Field Technician Skill Matching</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Enterprise Recipes</div>
+</div>
+
+<h2>Problem Statement</h2>
+<p>
+  A national telecommunications utility must dispatch work orders across 4 field technicians. Certain tasks (e.g., fiber splice, high-voltage junction) require specialized licenses. Technicians must only be assigned jobs they are qualified for, while equalizing travel distance and daily labor hours.
+</p>
+
+<h2>Production Implementation</h2>
+<pre><code><span class="kw">import</span> { balancedCluster, distances } <span class="kw">from</span> <span class="str">'geocluster-js'</span>;
+
+<span class="kw">interface</span> <span class="typ">WorkOrder</span> {
+  id: <span class="typ">string</span>;
+  lat: <span class="typ">number</span>;
+  lng: <span class="typ">number</span>;
+  durationHours: <span class="typ">number</span>;
+  requiredCertification?: <span class="str">'fiber-specialist'</span> | <span class="str">'high-voltage'</span>;
+}
+
+<span class="kw">const</span> technicians = [
+  { id: <span class="str">'Tech_1'</span>, certs: [<span class="str">'fiber-specialist'</span>] },
+  { id: <span class="str">'Tech_2'</span>, certs: [<span class="str">'high-voltage'</span>] },
+  { id: <span class="str">'Tech_3'</span>, certs: [<span class="str">'fiber-specialist'</span>, <span class="str">'high-voltage'</span>] },
+  { id: <span class="str">'Tech_4'</span>, certs: [] }, <span class="cmt">// General technician</span>
+];
+
+<span class="kw">function</span> <span class="fn">assignWorkOrders</span>(orders: <span class="typ">WorkOrder</span>[]) {
+  <span class="kw">return</span> balancedCluster(orders, {
+    k: technicians.length,
+    distance: distances.haversine,
+    weight: order =&gt; order.durationHours,
+    capacity: {
+      min: <span class="num">6.0</span>,  <span class="cmt">// Target minimum 6 hours of billable work</span>
+      max: <span class="num">8.0</span>,  <span class="cmt">// Hard cap at 8 hours standard shift</span>
+    },
+    eligibility: {
+      <span class="cmt">// Points advertise required tags</span>
+      points: wo =&gt; wo.requiredCertification ? [wo.requiredCertification] : [],
+      <span class="cmt">// Technician clusters advertise their granted certifications</span>
+      clusters: techIdx =&gt; technicians[techIdx].certs,
+    },
+    solver: <span class="str">'fast'</span>,
+  });
+}</code></pre>
+
+<div class="callout callout-success">
+  <strong>Eligibility Enforcement:</strong>
+  If a work order requires <code>'high-voltage'</code>, it will only ever be assigned to Technician 2 or 3. If no certified technician has remaining capacity, the job is cleanly placed in <code>result.unassigned</code> for emergency dispatch triage.
+</div>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 14</span></div>
+
+<!-- ================= PAGE 15: CHAPTER 13 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 13</div>
+    <h1>Production Recipe 3: Dynamic Sticky Re-Clustering</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Enterprise Recipes</div>
+</div>
+
+<h2>Problem Statement</h2>
+<p>
+  In on-demand delivery services, orders arrive dynamically in real time. Re-running spatial clustering naively causes established courier routes to oscillate, confusing drivers and invalidating pre-packed orders. We need to integrate new incoming orders with minimal assignment perturbation.
+</p>
+
+<h2>Production Implementation</h2>
+<pre><code><span class="kw">import</span> { balancedCluster, extractAssignments, distances } <span class="kw">from</span> <span class="str">'geocluster-js'</span>;
+
+<span class="kw">class</span> <span class="typ">DynamicDispatchEngine</span> {
+  <span class="kw">private</span> currentOrders: <span class="typ">any</span>[] = [];
+  <span class="kw">private</span> lastAssignments: <span class="typ">number</span>[] = [];
+  <span class="kw">private</span> fleetSize = <span class="num">5</span>;
+
+  <span class="cmt">// Initial morning dispatch</span>
+  <span class="kw">public</span> <span class="fn">initializeShift</span>(morningOrders: <span class="typ">any</span>[]) {
+    <span class="kw">this</span>.currentOrders = [...morningOrders];
+    <span class="kw">const</span> result = balancedCluster(<span class="kw">this</span>.currentOrders, {
+      k: <span class="kw">this</span>.fleetSize,
+      distance: distances.haversine,
+      capacity: { max: <span class="num">50</span> },
+    });
+
+    <span class="kw">this</span>.lastAssignments = extractAssignments(result, <span class="kw">this</span>.currentOrders);
+    <span class="kw">return</span> result;
+  }
+
+  <span class="cmt">// Incremental on-demand order insertion</span>
+  <span class="kw">public</span> <span class="fn">ingestNewOrders</span>(rushOrders: <span class="typ">any</span>[]) {
+    <span class="kw">const</span> mergedOrders = [...<span class="kw">this</span>.currentOrders, ...rushOrders];
+
+    <span class="kw">const</span> updatedResult = balancedCluster(mergedOrders, {
+      k: <span class="kw">this</span>.fleetSize,
+      distance: distances.haversine,
+      capacity: { max: <span class="num">55</span> },
+      previous: {
+        <span class="cmt">// Anchor existing orders to their established couriers</span>
+        assignments: <span class="kw">this</span>.lastAssignments,
+      }
+    });
+
+    <span class="kw">this</span>.currentOrders = mergedOrders;
+    <span class="kw">this</span>.lastAssignments = extractAssignments(updatedResult, mergedOrders);
+    <span class="kw">return</span> updatedResult;
+  }
+}</code></pre>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 15</span></div>
+
+<!-- ================= PAGE 16: CHAPTER 14 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 14</div>
+    <h1>Production Recipe 4: Road Network Routing with OSRM</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Enterprise Recipes</div>
+</div>
+
+<h2>Problem Statement</h2>
+<p>
+  In archipelagos, coastal cities, or areas divided by mountain ranges and rivers, crow-flies distance is severely misleading. Two points 2 miles apart across a harbor may require a 45-minute highway drive. We integrate precomputed driving time matrices from Open Source Routing Machine (OSRM).
+</p>
+
+<h2>Production Implementation</h2>
+<pre><code><span class="kw">import</span> { balancedCluster, distances } <span class="kw">from</span> <span class="str">'geocluster-js'</span>;
+
+<span class="kw">async function</span> <span class="fn">clusterByDrivingTimes</span>(stops: <span class="typ">Array</span>&lt;{ lat: <span class="typ">number</span>; lng: <span class="typ">number</span> }&gt;) {
+  <span class="cmt">// 1. Format coordinates for OSRM table service (lng,lat;lng,lat...)</span>
+  <span class="kw">const</span> coordsString = stops.map(s =&gt; s.lng + <span class="str">','</span> + s.lat).join(<span class="str">';'</span>);
+  <span class="kw">const</span> osrmUrl = <span class="str">'http://router.project-osrm.org/table/v1/driving/'</span> + coordsString + <span class="str">'?annotations=duration'</span>;
+
+  console.log(<span class="str">'Requesting road travel time matrix from OSRM...'</span>);
+  <span class="kw">const</span> response = <span class="kw">await</span> fetch(osrmUrl);
+  <span class="kw">const</span> data = <span class="kw">await</span> response.json();
+
+  <span class="cmt">// durations is an N x N matrix of driving seconds</span>
+  <span class="kw">const</span> durationMatrix: <span class="typ">number</span>[][] = data.durations;
+
+  <span class="cmt">// 2. Execute balanced clustering using precomputed network matrix</span>
+  <span class="kw">const</span> result = balancedCluster(stops, {
+    k: <span class="num">4</span>,
+    distance: distances.fromMatrix(durationMatrix),
+    useMatrix: <span class="kw">true</span>,                   <span class="cmt">// Passes matrix row/col indices to solver</span>
+    capacity: { min: <span class="num">15</span>, max: <span class="num">25</span> },
+    solver: <span class="str">'fast'</span>,
+  });
+
+  console.log(<span class="str">'Clustered by real road driving times successfully!'</span>);
+  <span class="kw">return</span> result;
+}</code></pre>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 16</span></div>
+
+<!-- ================= PAGE 17: CHAPTER 15 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 15</div>
+    <h1>Empirical Benchmarks & Scalability Profiling</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Performance</div>
+</div>
+
+<h2>Benchmark Methodology</h2>
+<p>
+  Microbenchmarks were evaluated on an Apple M1 silicon environment (8-core CPU, 16GB unified RAM) using Node.js v20.10.0 runtime and the official Vitest/Benchmark harness included in the repository. Datasets comprised pseudo-random geographic coordinates dispersed across the continental United States.
+</p>
+
+<div class="metric-row">
+  <div class="metric-card">
+    <div class="metric-val">&lt; 3 ms</div>
+    <div class="metric-lbl">100 Points (k=5)</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-val">28 ms</div>
+    <div class="metric-lbl">1,000 Points (k=20)</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-val">287 ms</div>
+    <div class="metric-lbl">5,000 Points (k=50)</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-val">1.24 s</div>
+    <div class="metric-lbl">10,000 Points (k=100)</div>
+  </div>
+</div>
+
+<h2>Comparative Performance Table</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Dataset Size</th>
+      <th>Clusters (k)</th>
+      <th>Fast Solver Latency</th>
+      <th>Exact Solver Latency</th>
+      <th>Speedup Multiplier</th>
+      <th>Fast Imbalance</th>
+      <th>Exact Imbalance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>100 points</strong></td>
+      <td>k = 5</td>
+      <td>2.5 ms</td>
+      <td>8.3 ms</td>
+      <td><strong>3.3x</strong></td>
+      <td>0.06</td>
+      <td>0.02</td>
+    </tr>
+    <tr>
+      <td><strong>500 points</strong></td>
+      <td>k = 10</td>
+      <td>12.1 ms</td>
+      <td>45.2 ms</td>
+      <td><strong>3.7x</strong></td>
+      <td>0.07</td>
+      <td>0.03</td>
+    </tr>
+    <tr>
+      <td><strong>1,000 points</strong></td>
+      <td>k = 20</td>
+      <td>28.4 ms</td>
+      <td>124.8 ms</td>
+      <td><strong>4.4x</strong></td>
+      <td>0.08</td>
+      <td>0.03</td>
+    </tr>
+    <tr>
+      <td><strong>5,000 points</strong></td>
+      <td>k = 50</td>
+      <td>287.3 ms</td>
+      <td>1,840 ms</td>
+      <td><strong>6.4x</strong></td>
+      <td>0.09</td>
+      <td>0.04</td>
+    </tr>
+    <tr>
+      <td><strong>10,000 points</strong></td>
+      <td>k = 100</td>
+      <td>1,243 ms</td>
+      <td><em>N/A (Memory Bound)</em></td>
+      <td><strong>Infinity</strong></td>
+      <td>0.11</td>
+      <td><em>N/A</em></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Imbalance Ratio Metric Definition</h2>
+<p>
+  Imbalance ratio evaluates equity across cluster loads:
+</p>
+<pre><code>Imbalance Ratio = (Max_Weight - Min_Weight) / Mean_Weight</code></pre>
+<p>
+  A ratio of 0.00 indicates perfect mathematical parity. As seen in the empirical results, the Fast Solver consistently delivers imbalance below 0.10 while completing in milliseconds.
+</p>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 17</span></div>
+
+<!-- ================= PAGE 18: CHAPTER 16 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 16</div>
+    <h1>Zero-Dependency Architecture & CI/CD</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Infrastructure</div>
+</div>
+
+<h2>Zero External Runtime Dependencies</h2>
+<p>
+  Modern enterprise software supply chains are increasingly vulnerable to transitive dependency hijacking, breaking updates, and bloated Docker containers. <strong>geocluster-js ships with zero runtime dependencies.</strong>
+</p>
+<ul>
+  <li><strong>Instant Installation:</strong> Downloads and unpacks in under 200ms.</li>
+  <li><strong>Audit Immune:</strong> Clean <code>npm audit</code> with 0 vulnerabilities guaranteed.</li>
+  <li><strong>Ultra Compact Bundle:</strong> 22.0 kB compressed, 103.3 kB unpacked.</li>
+  <li><strong>Universal Runtime:</strong> Executes seamlessly in Node.js, Deno, Bun, Cloudflare Workers, AWS Lambda, and browser web workers.</li>
+</ul>
+
+<h2>Dual ESM & CommonJS Build Pipeline</h2>
+<p>
+  Using <code>tsup</code>, the package compiles clean parallel builds:
+</p>
+<ul>
+  <li><code>dist/index.mjs</code>: Pure ECMAScript Module with full tree-shaking support for modern bundlers (Vite, Rollup, Webpack 5, Next.js).</li>
+  <li><code>dist/index.js</code>: CommonJS module for traditional enterprise Node.js environments.</li>
+  <li><code>dist/index.d.ts</code> & <code>dist/index.d.mts</code>: TypeScript declarations with type definition maps.</li>
+</ul>
+
+<h2>Enterprise CI/CD Automation Matrix</h2>
+<p>
+  The repository is continuously validated against Node.js 18.x, 20.x, and 22.x LTS runtimes via GitHub Actions:
+</p>
+<pre><code><span class="cmt"># .github/workflows/ci.yml</span>
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build</code></pre>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 18</span></div>
+
+<!-- ================= PAGE 19: CHAPTER 17 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 17</div>
+    <h1>Operational Diagnostics & Troubleshooting</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Operations & FAQ</div>
+</div>
+
+<h2>Common Operational Questions & Diagnoses</h2>
+
+<h3>1. Points Appearing in <code>result.unassigned</code></h3>
+<p>
+  <strong>Cause:</strong> Infeasible capacity bounds. If n = 100, k = 4, and <code>capacity.max = 20</code>, the maximum possible assigned weight is 4 * 20 = 80. The remaining 20 points physically cannot fit into the clusters without violating hard constraints.
+</p>
+<p>
+  <strong>Remedy:</strong> Ensure that Sum_{j=1}^k C_max(j) &gt;= Sum_{i=1}^n w(p_i).
+</p>
+
+<h3>2. Identical Duplicate Coordinates in Dataset</h3>
+<p>
+  <strong>Behavior:</strong> Many spatial algorithms crash with division-by-zero errors when encountering identical co-located points. GeoCluster gracefully handles co-located coordinates by evaluating point identity rather than geometric separation alone.
+</p>
+
+<h3>3. Extreme Aspect Ratio Clusters</h3>
+<p>
+  <strong>Diagnosis:</strong> In rare spatial layouts where delivery stops stretch along a single long rural highway, Euclidean metrics can create elongated needle-shaped clusters.
+</p>
+<p>
+  <strong>Remedy:</strong> Switch to <code>useMatrix: true</code> with driving times, or increase <code>maxIterations</code> to 50 to allow longitudinal centroids to settle.
+</p>
+
+<h3>4. Deterministic Reproducibility Across Environments</h3>
+<p>
+  <strong>Guarantee:</strong> Because GeoCluster incorporates its own internal seeded <code>xorshift128+</code> implementation rather than relying on the platform's native <code>Math.random()</code>, passing <code>seed: 42</code> guarantees identical output on Windows, Linux, and macOS.
+</p>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 19</span></div>
+
+<!-- ================= PAGE 20: CHAPTER 18 ================= -->
+<div class="page-break"></div>
+<div class="chapter-header">
+  <div>
+    <div class="chapter-num">Chapter 18</div>
+    <h1>Roadmap, Governance & Attribution</h1>
+  </div>
+  <div style="font-size: 8pt; color: #64748b;">Community & Roadmap</div>
+</div>
+
+<h2>Forward Strategic Roadmap</h2>
+<ul>
+  <li><strong>WebAssembly (WASM) Core:</strong> Compiling distance matrix loops and priority assignment queues to Rust/WASM to achieve sub-millisecond execution for 50,000+ points in browser tabs.</li>
+  <li><strong>Contiguity & Polygon Enclosure Constraints:</strong> Preventing disconnected cluster islands by integrating planar Delaunay triangulation and graph connectivity checks.</li>
+  <li><strong>Time-Window Clustered Routing:</strong> Simultaneous optimization across both 2D spatial distance and 1D temporal delivery time windows (x, y, t).</li>
+  <li><strong>Multi-Depot Allocation:</strong> Automatically selecting optimal pickup depot locations among a candidate pool while balancing delivery clusters.</li>
+</ul>
+
+<h2>Authors, Maintainers & Community</h2>
+<p>
+  <strong>GeoCluster</strong> is created and maintained by:
+</p>
+<ul>
+  <li><strong>Piyush Kumar</strong> &bull; Lead Architect & Co-Author &bull; <code>piyushkumar.prog@gmail.com</code></li>
+  <li><strong>Shivanghi Sharma</strong> &bull; Co-Author & Algorithmic Design</li>
+</ul>
+
+<h2>Official Links & Package Coordinates</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>URL / Coordinate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>NPM Package Registry</strong></td>
+      <td><code>https://www.npmjs.com/package/geocluster-js</code></td>
+    </tr>
+    <tr>
+      <td><strong>Interactive Web Demo</strong></td>
+      <td><code>https://piyushkumar-prog.github.io/geocluster/</code></td>
+    </tr>
+    <tr>
+      <td><strong>GitHub Source Repository</strong></td>
+      <td><code>https://github.com/piyushkumar-prog/geocluster</code></td>
+    </tr>
+    <tr>
+      <td><strong>Issue Tracker & Bugs</strong></td>
+      <td><code>https://github.com/piyushkumar-prog/geocluster/issues</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-info" style="margin-top: 30px;">
+  <strong>License & Usage Rights:</strong>
+  GeoCluster is released under the permissive <strong>MIT License</strong>. It is free for commercial, private, enterprise, and open-source use without royalty or restriction.
+</div>
+
+<div class="doc-footer"><span>GeoCluster (geocluster-js) Technical Manual</span><span>Page 20</span></div>
+
+</body>
+</html>
