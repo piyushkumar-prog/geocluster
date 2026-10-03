@@ -19,6 +19,7 @@ Thank you to everyone who has contributed to GeoCluster!
 
 ### Shivanghi Sharma
 - **Role**: Co-Author
+- **GitHub**: [@shivanghi-sharma](https://github.com/shivanghi-sharma)
 - **Contributions**:
   - Algorithm design and optimization
   - Feature development and implementation
